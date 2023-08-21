@@ -6,7 +6,7 @@
 #include <common/mem.h>
 
 / {
-	sram_2000FFE0: sram@2000FC00 {
+	sram_2000FC00: sram@2000FC00 {
 		compatible = "zephyr,memory-region", "mmio-sram";
 		reg = <0x2000FC00 0x400>;
                 zephyr,memory-region = "FlashSim";
@@ -21,7 +21,7 @@
 			#address-cells = <1>;
 		        #size-cells = <1>;
 		        erase-value = <0xff>;
-                        memory-region = <&sram_2000FFE0>;
+                        memory-region = <&sram_2000FC00>;
 
 			flash_sim0: flash_sim@0 {
 			        status = "okay";

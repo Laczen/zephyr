@@ -19,7 +19,7 @@
 			boot_mode0: boot_mode@0 {
 				compatible = "zephyr,retention";
 				status = "okay";
-				reg = <0x0 0x100>;
+				reg = <0x0 0x3FD>;
 				prefix = [08 04];
 				checksum = <1>;
 			};
