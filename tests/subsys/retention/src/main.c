@@ -10,6 +10,15 @@
 
 static const struct device *ret_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_boot_mode));
 
+static void *retention_api_setup(void)
+{
+	if (IS_ENABLED(CONFIG_USERSPACE)) {
+		k_object_access_grant(ret_dev, k_current_get());
+	}
+
+	return NULL;
+}
+
 ZTEST_USER(retention_api, test_get_size)
 {
 	size_t bi_size = retention_size(ret_dev);
@@ -39,4 +48,4 @@ ZTEST_USER(retention_api, test_get_set)
 	zassert_equal(memcmp(rd, wr, sizeof(wr)), 0, "data mismatch");
 }
 
-ZTEST_SUITE(retention_api, NULL, NULL, NULL, NULL, NULL);
+ZTEST_SUITE(retention_api, NULL, retention_api_setup, NULL, NULL, NULL);
