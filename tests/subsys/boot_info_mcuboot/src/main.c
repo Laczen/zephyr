@@ -8,10 +8,36 @@
 #include <zephyr/ztest.h>
 #include <zephyr/devicetree.h>
 #include <zephyr/sys/crc.h>
-#include <zephyr/boot_info/boot_info.h>
 
-#define BOOT_INFO DT_NODELABEL(boot_info)
-#define BOOT_INFO_ALIAS DT_ALIAS(bi)
+#define BOOT_INFO 0
+
+/* This is needlessly complex but otherwise comparison with retention
+ * would be invalid. In practice the address and size would be added
+ * in the mcuboot_config.h file using the devicetree macros below.
+ */
+#define BOOT_INFO_NODE DT_PARENT(DT_NODELABEL(retainedmem0))
+#define BOOT_INFO_ADDR DT_REG_ADDR(BOOT_INFO_NODE)
+#define BOOT_INFO_SIZE DT_REG_SIZE(BOOT_INFO_NODE)
+
+#define boot_info_get_size(_bootinfo) BOOT_INFO_SIZE
+
+/* This is needlessly complex but otherwise comparison with retention
+ * would be invalid. In practice mcuboot would just use memcpy().
+ */
+int boot_info_set(int bootinfo, void *data)
+{
+	memcpy((void *)BOOT_INFO_ADDR, data, BOOT_INFO_SIZE);
+	return 0;
+}
+
+/* This is needlessly complex but otherwise comparison with retention
+ * would be invalid. In practice mcuboot would just use memcpy().
+ */
+int boot_info_get(int bootinfo, void *data)
+{
+	memcpy(data, (void *)BOOT_INFO_ADDR, BOOT_INFO_SIZE);
+	return 0;
+}
 
 const uint8_t *hdr = "\x08\x04";
 
@@ -41,11 +67,6 @@ static bool is_valid(uint8_t *data, size_t len)
 
 static void *boot_info_api_setup(void)
 {
-	if (IS_ENABLED(CONFIG_USERSPACE)) {
-		k_object_access_grant(boot_info_get_device(BOOT_INFO),
-				      k_current_get());
-	}
-
 	return NULL;
 }
 
