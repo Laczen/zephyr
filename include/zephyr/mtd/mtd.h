@@ -71,7 +71,10 @@ struct mtd_dev_cfg {
 	const struct device *dev;
 	/** type of device used as mtd backend */
 	const enum mtd_type type;
+<<<<<<< HEAD
 	/** backend routines */
+=======
+>>>>>>> bb2d1df96c (mtd: api for mtd devices)
 	int (* const read)(const struct mtd_dev_cfg *dev_cfg, off_t off,
 			   void *dst, size_t len);
 	int (* const write)(const struct mtd_dev_cfg *dev_cfg, off_t off,
