@@ -43,7 +43,6 @@ ZTEST_USER(mtd_api, test_read_write_erase)
 	zassert_equal(memcmp(wr, rd, sizeof(wr)), 0, "read/write data differ");
 
 
-
 	if ((IS_ENABLED(CONFIG_MTD_FLASH)) && (type == FLASH)) {
 		const struct device *dev = mtd_get_device(mtd);
 		const struct flash_parameters *flparam =
