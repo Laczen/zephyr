@@ -1,0 +1,53 @@
+# Copyright (c) 2023, Laczen
+# SPDX-License-Identifier: Apache-2.0
+
+menuconfig MTD
+	bool "mtd support"
+	help
+	  Enables support for the mtd system, which enables using generic mtd
+	  routines to read/write and erase mtd devices. Supported mtd devices
+	  are flash, but also eeprom, bbram and retained_mem over an adaptation
+	  layer.
+
+if MTD
+
+config MTD_FLASH
+	bool "mtd support for flash devices"
+	default y
+	depends on FLASH
+	help
+	  Enables mtd support for flash devices.
+
+config MTD_EEPROM
+	bool "mtd support for eeprom devices"
+	default y
+	depends on EEPROM
+	help
+	  Enables mtd support for eeprom devices.
+
+config MTD_RETAINED_MEM
+	bool "mtd support for retained_mem devices"
+	default y
+	depends on RETAINED_MEM
+	help
+	  Enables mtd support for retained_mem devices.
+
+config MTD_ERASE_BUFSIZE
+	int "mtd erase bufsize"
+	default 64
+	range 16 256
+	help
+	  Size of the buffer used to erase when mtd is used on non-flash
+	  devices.
+
+config MTD_ERASE_VALUE
+	hex "mtd erase value"
+	default 0xff
+	help
+	  Value used to erase when mtd is used on non-flash devices.
+
+module = MTD
+module-str = mtd
+source "subsys/logging/Kconfig.template.log_config"
+
+endif # MTD

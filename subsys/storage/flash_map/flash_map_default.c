@@ -27,7 +27,13 @@
 	 .fa_size = DT_REG_SIZE(part), },
 #endif
 
-#define FOREACH_PARTITION(n) DT_FOREACH_CHILD(DT_DRV_INST(n), FLASH_AREA_FOO)
+#define FLASH_AREA_ONLY_FLASH(part)						\
+	COND_CODE_1(DT_NODE_HAS_COMPAT(DT_GPARENT(part), mtd_eeprom), (),	\
+		(COND_CODE_1(DT_NODE_HAS_COMPAT(DT_GPARENT(part),		\
+		mtd_retained_ram), (), (FLASH_AREA_FOO(part)))))
+
+#define FOREACH_PARTITION(n)							\
+	DT_FOREACH_CHILD(DT_DRV_INST(n), FLASH_AREA_ONLY_FLASH)
 
 /* We iterate over all compatible 'fixed-partitions' nodes and
  * use DT_FOREACH_CHILD to iterate over all the partitions for that
