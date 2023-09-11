@@ -7,16 +7,14 @@
  */
 
 #include <zephyr/ztest.h>
-#include <zephyr/mtd/mtd.h>
-
-#define SLOT1_PARTITION		slot1_partition
+#include <zephyr/nvmp/nvmp.h>
 
 /**
- * @brief Test mtd_api()
+ * @brief Test nvmp_api()
  */
-ZTEST(mtd, test_mtd_api_slot1)
+ZTEST(nvmp, test_nvmp_api_slot1)
 {
-	const struct mtd_info *info = MTD_GET(slot1_partition);
+	const struct nvmp_info *info = NVMP_GET(slot1_partition);
 	uint8_t wd[256];
 	uint8_t rd[256];
 	off_t off = 0;
@@ -24,24 +22,24 @@ ZTEST(mtd, test_mtd_api_slot1)
 
 	(void)memset(wd, 0xa5, sizeof(wd));
 
-	rc = mtd_write(info, off, wd, sizeof(wd));
+	rc = nvmp_write(info, off, wd, sizeof(wd));
 	zassert_true(rc == 0, "write() fail");
 
 	/* read it back */
-	rc = mtd_read(info, off, rd, sizeof(rd));
+	rc = nvmp_read(info, off, rd, sizeof(rd));
 	zassert_true(rc == 0, "read() fail");
 
 	rc = memcmp(wd, rd, sizeof(wd));
 	zassert_true(rc == 0, "read data != write data");
 
 	/* erase it */
-	rc = mtd_erase(info, 0, mtd_get_size(info));
+	rc = nvmp_erase(info, 0, nvmp_get_size(info));
 	zassert_true(rc == 0, "read data != write data");
 }
 
-ZTEST(mtd, test_mtd_api_slot0)
+ZTEST(nvmp, test_nvmp_api_slot0)
 {
-	const struct mtd_info *info = MTD_GET(slot0_partition);
+	const struct nvmp_info *info = NVMP_GET(slot0_partition);
 	uint8_t wd[256];
 	uint8_t rd[256];
 	off_t off = 0;
@@ -49,19 +47,19 @@ ZTEST(mtd, test_mtd_api_slot0)
 
 	(void)memset(wd, 0xa5, sizeof(wd));
 
-	rc = mtd_write(info, off, wd, sizeof(wd));
+	rc = nvmp_write(info, off, wd, sizeof(wd));
 	zassert_true(rc == 0, "write() fail");
 
 	/* read it back */
-	rc = mtd_read(info, off, rd, sizeof(rd));
+	rc = nvmp_read(info, off, rd, sizeof(rd));
 	zassert_true(rc == 0, "read() fail");
 
 	rc = memcmp(wd, rd, sizeof(wd));
 	zassert_true(rc == 0, "read data != write data");
 
 	/* erase it */
-	rc = mtd_erase(info, 0, mtd_get_size(info));
+	rc = nvmp_erase(info, 0, nvmp_get_size(info));
 	zassert_true(rc == 0, "read data != write data");
 }
 
-ZTEST_SUITE(mtd, NULL, NULL, NULL, NULL, NULL);
+ZTEST_SUITE(nvmp, NULL, NULL, NULL, NULL, NULL);
